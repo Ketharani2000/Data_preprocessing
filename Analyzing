@@ -1,0 +1,101 @@
+import numpy as np
+import matplotlib . pyplot as plt
+
+def generate_signal ( signal_length , num_nonzero ) :
+  signal = np . zeros ( signal_length )
+  nonzero_indices = np . random . choice ( signal_length ,
+  num_nonzero , replace = False )
+  nonzero_values = 50* np . random . randn ( num_nonzero )
+  signal [ nonzero_indices ] = nonzero_values
+  return signal
+
+# Data generation
+signal_length = 100 # Total length of the signal
+num_nonzero = 10
+your_index_no = 200305 # Enter your index number ( without English letter and without leading zeros)
+signal = generate_signal ( signal_length , num_nonzero )
+signal [10] = ( your_index_no % 10) *10 + 10
+if your_index_no % 10 == 0:
+  signal [10] = np . random . randn (1) + 30
+
+signal = signal . reshape ( signal_length ,1)
+
+# plotting
+plt . figure ( figsize =(15 ,5) )
+plt . subplot (1 , 1 , 1)
+plt . title (" Original Data ")
+plt . stem ( signal )
+
+
+
+from sklearn.preprocessing import MaxAbsScaler
+
+# Create a MaxAbsScaler object
+scaler = MaxAbsScaler()
+
+# Normalize the signal using MaxAbsScaler
+normalized_signal = scaler.fit_transform(signal)
+
+# Plotting
+plt.figure(figsize=(15, 5))
+
+# Normalized Signal
+plt.subplot(1, 1, 1)
+plt.title("Normalized Signal after MaxAbsScaler")
+plt.stem(normalized_signal)
+
+plt.tight_layout()
+plt.show()
+
+def min_max_scale(data):
+    min_val = np.min(data)
+    max_val = np.max(data)
+    scaled_data = (data - min_val) / (max_val - min_val)
+    return scaled_data
+
+# Normalize the signal using Min-Max scaling function
+normalized_signal1 = min_max_scale(signal)
+
+# Plotting
+plt.figure(figsize=(15, 10))
+
+# Normalized Signal (Min-Max Scaling)
+plt.subplot(2, 1, 2)
+plt.title("Normalized Signal after MinMaxScaling")
+plt.stem(normalized_signal1)
+
+plt.tight_layout()
+plt.show()
+
+def standard_scale(data1):
+  mean_value = np.mean(data1)
+  std_deviation = np.std(data1)
+  scaled_data1 = (data1-mean_value)/std_deviation
+  return scaled_data1
+
+# Normalize the signal using Standard Scaling function
+normalized_signal2 = standard_scale(signal)
+
+# Plotting
+plt.figure(figsize=(15, 10))
+
+# Normalized Signal (Min-Max Scaling)
+plt.subplot(2, 1, 2)
+plt.title("Normalized Signal after Standard_Scaling")
+plt.stem(normalized_signal2)
+
+plt.tight_layout()
+plt.show()
+
+# Count non-zero elements in the original data
+nonzero_count_before = np.count_nonzero(signal)
+
+# Count non-zero elements in the normalized data
+nonzero_count_after = np.count_nonzero(normalized_signal)
+nonzero_count_after1 = np.count_nonzero(normalized_signal1)
+nonzero_count_after2 = np.count_nonzero(normalized_signal2)
+
+print("Number of Non-Zero Elements (Before Normalization):", nonzero_count_before)
+print("Number of Non-Zero Elements (After MaxAbsScaling Normalization):", nonzero_count_after)
+print("Number of Non-Zero Elements (After MinMax Normalization):", nonzero_count_after1)
+print("Number of Non-Zero Elements (After Standard Normalization):", nonzero_count_after2)
